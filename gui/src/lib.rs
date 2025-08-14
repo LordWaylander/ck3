@@ -26,6 +26,7 @@ fn App() -> Element {
         h1 {
             "test from guin App function, if you see it, dioxus works !"
         }
+        p{"MOUAHAHAHAHAHAHAHAH"}
         // div {
         //     select { onchange: move |e| {
         //         dbg!(&e);
