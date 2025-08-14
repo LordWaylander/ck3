@@ -1,0 +1,23 @@
+[tasks.web]
+description = "Lance l'interface web avec Dioxus"
+command = "dx"
+args = ["serve", "--platform", "web"]
+
+[tasks.desktop]
+description = "Lance l'interface desktop avec Dioxus"
+command = "dx"
+args = ["serve", "--platform", "desktop"]
+
+[tasks.cli]
+description = "Lance la CLI"
+command = "cargo"
+args = ["run", "--features", "cli"]
+
+[tasks.help]
+description = "Affiche cette aide"
+script = '''
+echo Commandes disponibles:
+echo  cargo make web     - Lance l'interface web
+echo  cargo make desktop - Lance l'interface desktop 
+echo  cargo make cli     - Lance l'interface CLI
+'''
