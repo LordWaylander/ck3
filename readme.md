@@ -2,7 +2,7 @@
 
 prérequis :
 - [https://dioxuslabs.com/learn/0.6/getting_started/](Dioxus)
-- [https://github.com/sagiegurari/cargo-make](Cargo Make)
+- [https://github.com/sagiegurari/cargo-make](Cargo-Make)
 
 ```
 commandes :
