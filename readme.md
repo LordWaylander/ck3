@@ -1,8 +1,8 @@
 # générateur de personnage pour CK3
 
 prérequis :
-- [Dioxus]([Dioxus](https://dioxuslabs.com/learn/0.6/getting_started/))
-- [Cargo-make]([Cargo-Make](https://github.com/sagiegurari/cargo-make))
+- [Dioxus](https://dioxuslabs.com/learn/0.6/getting_started/)
+- [Cargo-make](https://github.com/sagiegurari/cargo-make)
 
 ```
 commandes :
