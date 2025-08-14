@@ -1,6 +1,5 @@
 [tasks.web]
 description = "Lance l'interface web avec Dioxus"
-#cwd = "gui"
 command = "dx"
 args = ["serve", "--platform", "web"]
 
