@@ -1,19 +1,22 @@
 # générateur de personnage pour CK3
 
 ```
-commands :
-cargo make cli
+prérequis :
+- [https://dioxuslabs.com/learn/0.6/getting_started/](Dioxus)
+- [https://github.com/sagiegurari/cargo-make](Cargo Make)
+```
+
+```
+commandes :
+cargo make help 
+cargo make cli 
+cargo make cli-prod
 cargo make web
 cargo make desktop
 ```
 
 cli -> ok
-web -> todo
-desktop -> wip
-
-a installer :
-cargo install cargo make
-+ https://dioxuslabs.com/learn/0.6/getting_started/
+web / desktop -> wip
 
 
 
