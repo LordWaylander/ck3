@@ -1,5 +1,6 @@
 [tasks.web]
 description = "Lance l'interface web avec Dioxus"
+env = { RUSTFLAGS = "--cfg getrandom_backend=\"wasm_js\"" }
 command = "dx"
 args = ["serve", "--platform", "web"]
 

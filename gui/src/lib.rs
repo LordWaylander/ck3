@@ -1,9 +1,13 @@
 use dioxus::prelude::*;
-// use core::generate_personnage;
-// use core::structs::*;
+use core::generate_personnage;
+use core::structs::*;
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
 const MAIN_CSS: Asset = asset!("/assets/main.css");
+#[cfg(any(feature = "web"))]
+const EDUCATIONS: Asset  = asset!("/assets/ressources/educations.json");
+#[cfg(any(feature = "web"))]
+const PERSONNALITIES: Asset = asset!("/assets/ressources/personnalities.json");
 
 pub fn main() {
     dioxus::launch(App);
@@ -12,12 +16,16 @@ pub fn main() {
 
 #[component]
 fn App() -> Element {
-    // let mut params = use_signal(|| Parameters {
-    //     education: None,
-    //     level: None,
-    //     age: None
-    // });
-    // let mut personnage = use_signal(|| generate_personnage(params()));
+    let mut params = use_signal(|| Parameters {
+        education: None,
+        level: None,
+        age: None
+    });
+    #[cfg(any(feature = "web"))]
+    let mut personnage = use_signal(|| generate_personnage(params(), Some((EDUCATIONS, PERSONNALITIES))));
+
+    #[cfg(any(feature = "desktop"))]
+    let mut personnage = use_signal(|| generate_personnage(params(), None));
 
 
     rsx! {
