@@ -1,29 +1,22 @@
 [package]
 name = "gui"
-version = "0.1.0"
-authors = ["Waylander <francois.caizes@laposte.net>"]
-edition = "2024"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "gui"
+path = "src/main.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-dioxus = { version = "0.6.0", features = [] }
+dioxus = { version = "0.6.0", features = ["fullstack"] }
 core = { path = "../core" }
 
 [features]
-default = ["web"]
+default = []
 web = ["dioxus/web"]
 desktop = ["dioxus/desktop"]
 mobile = ["dioxus/mobile"]
-
-[profile]
-
-[profile.wasm-dev]
-inherits = "dev"
-opt-level = 1
-
-[profile.server-dev]
-inherits = "dev"
-
-[profile.android-dev]
-inherits = "dev"
+server = ["dioxus/server"]

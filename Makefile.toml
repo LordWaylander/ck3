@@ -1,31 +1,18 @@
-[tasks.web]
-description = "Lance l'interface web avec Dioxus"
-env = { RUSTFLAGS = "--cfg getrandom_backend=\"wasm_js\"" }
-command = "dx"
-args = ["serve", "--platform", "web"]
-
-[tasks.desktop]
-description = "Lance l'interface desktop avec Dioxus"
-env = { WEBKIT_DISABLE_DMABUF_RENDERER="1" }
-command = "dx"
-args = ["serve", "--platform", "desktop"]
+[tasks.clean]
+command = "cargo"
+args = ["clean"]
 
 [tasks.cli]
-description = "Lance la CLI"
 command = "cargo"
-args = ["run", "--features", "cli"]
+args = ["run", "--package", "cli"]
+workspace = false
 
-[tasks.cli-prod]
-description = "Lance la CLI"
-command = "cargo"
-args = ["build", "--release", "--features", "cli"]
+[tasks.web]
+command = "dx"
+args = ["serve", "--platform", "web", "--package", "gui"]
+workspace = false
 
-[tasks.help]
-description = "Affiche cette aide"
-script = '''
-echo Commandes disponibles:
-echo cargo make web     - Lance l'interface web
-echo cargo make desktop - Lance l'interface desktop 
-echo cargo make cli     - Lance l'interface CLI (dev mode)
-echo cargo make cli-prod - Build l'app en interface cli
-'''
+[tasks.desktop]
+command = "dx"
+args = ["serve", "--platform", "desktop", "--package", "gui"]
+workspace = false

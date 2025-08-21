@@ -1,8 +1,12 @@
 [package]
 name = "cli"
-version = "0.1.0"
-authors = ["Waylander <francois.caizes@laposte.net>"]
-edition = "2024"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "cli"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4.5.41", features = ["derive"] }
