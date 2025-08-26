@@ -15,7 +15,7 @@ pub async fn generate(
         age
     };
 
-    let pers = generate_personnage(params, None);
+    let pers = generate_personnage(params);
 
     Ok(pers)
 }

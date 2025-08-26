@@ -55,23 +55,14 @@ fn define_personality(
     return traits_incompatibles;
 }
 
-pub fn generate_personnage(parameters : Parameters, data: Option<(Vec<Education>, Vec<Personality>)>) -> Personnage {
+pub fn generate_personnage(parameters : Parameters) -> Personnage {
 
     // pour le web, normalement on envoie rien (none)
     // mais si en web version, faut aller chercher dans les assets et l'envoyer en paramètre
-    let educations: Vec<Education>;
-    let personalities: Vec<Personality>;
-    if data.is_none() {
-        let datas: (Vec<Education>, Vec<Personality>) = load_data();
-        educations = datas.0;
-        personalities  =  datas.1;
-    } else {
-        let datas = data.unwrap();
-        educations = datas.0;
-        personalities =  datas.1;
-    }
+    let datas: (Vec<Education>, Vec<Personality>) = load_data();
+    let educations: Vec<Education> = datas.0;
+    let personalities: Vec<Personality> = datas.1;
    
-
     let mut rng = rand::rng();
     let mut statistiques = Statistiques::new();
 

@@ -56,6 +56,6 @@ fn display_personnage(personnage: Personnage) {
 
 pub fn main() {
     let params = get_params();
-    let personnage = generate_personnage(params, None);
+    let personnage = generate_personnage(params);
     display_personnage(personnage);
 }
