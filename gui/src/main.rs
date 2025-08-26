@@ -1,32 +1,22 @@
 use dioxus::prelude::*;
-// use core::generate_personnage;
-// use core::structs::*;
+use core::structs::*;
+mod server;
+use server::generate;
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
 const MAIN_CSS: Asset = asset!("/assets/main.css");
-// #[cfg(any(feature = "web"))]
-// const EDUCATIONS: Asset  = asset!("/assets/ressources/educations.json");
-// #[cfg(any(feature = "web"))]
-// const PERSONNALITIES: Asset = asset!("/assets/ressources/personnalities.json");
 
 pub fn main() {
     dioxus::launch(App);
 }
 
-
 #[component]
 fn App() -> Element {
-    // let mut params = use_signal(|| Parameters {
-    //     education: None,
-    //     level: None,
-    //     age: None
-    // });
-    // #[cfg(any(feature = "web"))]
-    // let mut personnage = use_signal(|| generate_personnage(params(), Some((EDUCATIONS, PERSONNALITIES))));
 
-    // #[cfg(any(feature = "desktop"))]
-    // let mut personnage = use_signal(|| generate_personnage(params(), None));
-
+    let education = use_signal(|| None);
+    let level = use_signal(|| None);
+    let age = use_signal(|| None);
+    let mut personnage = use_signal(|| Personnage::default());
 
     rsx! {
         document::Link { rel: "icon", href: FAVICON }
@@ -34,7 +24,25 @@ fn App() -> Element {
         h1 {
             "test from guin App function, if you see it, dioxus works !"
         }
-        p{"MOUAHAHAHAHAHAHAHAH"}
+        button {
+            onclick: move |_| async move {
+                match generate(
+                    education.read().clone(),
+                    level.read().clone(),
+                    age.read().clone()
+                ).await {
+                    Ok(data) => personnage.set(data),
+                    Err(e) => {
+                        println!("Erreur lors de la génération: {:?}", e);
+                        // Gère l'erreur comme tu veux
+                    }
+                }
+            },
+            "GENERATE PERSONNAGE"
+        }
+
+
+        
         // div {
         //     select { onchange: move |e| {
         //         dbg!(&e);
@@ -53,32 +61,27 @@ fn App() -> Element {
         // div {
             
         // }
-        // button {
-        //     onclick: move |_| async move {
-        //         personnage.set(generate_personnage(params()))
-        //     },
-        //     "Générer personnage"
-        // }
-        // div {
-        //     p { "personnage généré : "}
-        //     p {"age : {personnage.read().age}"}
-        //     p {"education : {personnage.read().education.name}"}
-        //     p {"education level : {personnage.read().education.level}"}
 
-        //     ul {
-        //         for personalit in personnage.read().personnality.iter() {
-        //             li {"personnamlité : {personalit.name}"}
-        //         }
-        //     }
+        div {
+            p { "personnage généré : "}
+            p {"age : {personnage.read().age}"}
+            p {"education : {personnage.read().education.name}"}
+            p {"education level : {personnage.read().education.level}"}
 
-        //     p {"diplomatie  : {personnage.read().statistiques.diplomatie.base + personnage.read().statistiques.diplomatie.bonus}"}
-        //     p {"martialite  : {personnage.read().statistiques.martialite.base + personnage.read().statistiques.martialite.bonus}"}
-        //     p {"intendance  : {personnage.read().statistiques.intendance.base + personnage.read().statistiques.intendance.bonus}"}
-        //     p {"intrigue  : {personnage.read().statistiques.intrigue.base + personnage.read().statistiques.intrigue.bonus}"}
-        //     p {"erudition  : {personnage.read().statistiques.erudition.base + personnage.read().statistiques.erudition.bonus}"}
-        //     p {"prouesse  : {personnage.read().statistiques.prouesse.base + personnage.read().statistiques.prouesse.bonus}"}
+            ul {
+                for personalit in personnage.read().personnality.iter() {
+                    li {"personnamlité : {personalit.name}"}
+                }
+            }
 
-        // }
+            p {"diplomatie  : {personnage.read().statistiques.diplomatie.base + personnage.read().statistiques.diplomatie.bonus}"}
+            p {"martialite  : {personnage.read().statistiques.martialite.base + personnage.read().statistiques.martialite.bonus}"}
+            p {"intendance  : {personnage.read().statistiques.intendance.base + personnage.read().statistiques.intendance.bonus}"}
+            p {"intrigue  : {personnage.read().statistiques.intrigue.base + personnage.read().statistiques.intrigue.bonus}"}
+            p {"erudition  : {personnage.read().statistiques.erudition.base + personnage.read().statistiques.erudition.bonus}"}
+            p {"prouesse  : {personnage.read().statistiques.prouesse.base + personnage.read().statistiques.prouesse.bonus}"}
+
+        }
 
         // p {
         //     "{params.read().education}"

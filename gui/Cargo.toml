@@ -12,6 +12,7 @@ path = "src/main.rs"
 
 [dependencies]
 dioxus = { version = "0.6.0", features = ["fullstack"] }
+serde = {version = "1.0.219", features = ["derive"]}
 core = { path = "../core" }
 
 [features]

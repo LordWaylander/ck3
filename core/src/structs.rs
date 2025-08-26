@@ -9,7 +9,7 @@ pub struct Parameters {
     pub age: Option<i8>
 }
 
-#[derive(Debug, serde::Deserialize, Clone, PartialEq, Default)]
+#[derive(Debug, serde::Deserialize, serde::Serialize, Clone, PartialEq, Default)]
 pub struct Education {
     pub  name: String,
     pub level: u8,
@@ -17,7 +17,7 @@ pub struct Education {
     pub bonus: Vec<Bonus>,
 }
 
-#[derive(Debug, serde::Deserialize, Clone)]
+#[derive(Debug, serde::Deserialize, serde::Serialize, Clone)]
 pub struct Personality {
     pub name: String,
     pub points : i16,
@@ -25,13 +25,13 @@ pub struct Personality {
     pub incompatible: Vec<String>
 }
 
-#[derive(Debug, serde::Deserialize, Clone, PartialEq)]
+#[derive(Debug, serde::Deserialize, serde::Serialize, Clone, PartialEq)]
 pub struct Bonus {
     pub name: String,
     pub apttitudes: i8
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, serde::Deserialize, serde::Serialize)]
 pub struct Personnage {
     pub age: Age,
     pub education: Education,
@@ -40,7 +40,7 @@ pub struct Personnage {
     pub points_totaux: u16
 }
 
-#[derive(Debug, PartialEq, PartialOrd)]
+#[derive(Debug, PartialEq, PartialOrd, serde::Deserialize, serde::Serialize)]
 pub struct Age(pub i8);
 
 impl Default for Age {
@@ -122,7 +122,7 @@ pub enum Signe {
     Decrement
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, serde::Deserialize, serde::Serialize)]
 pub struct Statistiques {
     pub diplomatie: Statistique,
     pub martialite: Statistique,
@@ -132,7 +132,7 @@ pub struct Statistiques {
     pub prouesse: Statistique
 }
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, serde::Deserialize, serde::Serialize)]
 pub struct Statistique {
     pub base: i8,
     pub bonus: i8
