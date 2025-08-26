@@ -12,6 +12,11 @@ command = "dx"
 args = ["serve", "--platform", "web", "--package", "gui"]
 workspace = false
 
+[tasks.web-build]
+command = "dx"
+args = ["bundle", "--platform", "web", "--package", "gui"]
+workspace = false
+
 [tasks.desktop]
 command = "dx"
 args = ["serve", "--platform", "desktop", "--package", "gui"]

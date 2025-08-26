@@ -13,9 +13,9 @@ pub fn main() {
 #[component]
 fn App() -> Element {
 
-    let education = use_signal(|| None);
-    let level = use_signal(|| None);
-    let age = use_signal(|| None);
+    let mut education = use_signal(|| None);
+    let mut level = use_signal(|| None);
+    let mut age = use_signal(|| None);
     let mut personnage = use_signal(|| Personnage::default());
 
     rsx! {
@@ -43,24 +43,43 @@ fn App() -> Element {
 
 
         
-        // div {
-        //     select { onchange: move |e| {
-        //         dbg!(&e);
-        //             let mut mutable_reference = params.write();
-        //             mutable_reference.education = Some(e.value());
-        //         },
-        //         option { disabled: true, selected: true, "Choose Your Education" }
-        //         option { value: "diplomatie", "Diplomatie" }
-        //         option { value: "martialite", "Martialite" }
-        //         option { value: "intendance", "Intendance" }
-        //         option { value: "intrigue", "Intrigue" }
-        //         option { value: "erudition", "Erudition"},
-        //         option { value: "random", "Random"}
-        //     }
-        // }
-        // div {
-            
-        // }
+        div {
+            select { onchange: move |e| {
+                    let mut education_mutable_reference = education.write();
+                    *education_mutable_reference = if e.value() == "random" {
+                        None
+                    } else {
+                        Some(e.value())
+                    };
+                },
+                option { disabled: true, selected: true, "Choose Your Education" }
+                option { value: "diplomatie", "Diplomatie" }
+                option { value: "martialite", "Martialite" }
+                option { value: "intendance", "Intendance" }
+                option { value: "intrigue", "Intrigue" }
+                option { value: "erudition", "Erudition"},
+                option { value: "random", "Random"}
+            }
+        }
+        div {
+            select { onchange: move |e| {
+                let mut level_mutable_reference = level.write();
+                *level_mutable_reference = if e.value() == "random" {
+                    None
+                } else {
+                    Some(e.value().parse().unwrap())
+                };
+            },
+            option { disabled: true, selected: true, "Choose Your level education" }
+            option { value: 0, "0" }
+            option { value: 1, "1" }
+            option { value: 2, "2" }
+            option { value: 3, "3" }
+            option { value: 4, "4"},
+            option { value: 5, "5"}
+            option { value: "random", "Random"}
+        }
+        }
 
         div {
             p { "personnage généré : "}
