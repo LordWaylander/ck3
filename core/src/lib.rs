@@ -1,4 +1,5 @@
 pub mod structs;
+use std::collections::HashMap;
 use structs::*;
 use rand::prelude::*;
 
@@ -55,7 +56,7 @@ fn define_personality(
     return traits_incompatibles;
 }
 
-pub fn generate_personnage(parameters : Parameters) -> Personnage {
+pub fn generate_personnage(parameters : Parameters) -> Personnage{
 
     // pour le web, normalement on envoie rien (none)
     // mais si en web version, faut aller chercher dans les assets et l'envoyer en paramètre
@@ -64,7 +65,15 @@ pub fn generate_personnage(parameters : Parameters) -> Personnage {
     let personalities: Vec<Personality> = datas.1;
    
     let mut rng = rand::rng();
-    let mut statistiques = Statistiques::new();
+
+    let mut statistiques: HashMap<String, Statistique> = HashMap::from([
+        ("diplomatie".to_string(), Statistique::new("diplomatie")),
+        ("martialite".to_string(), Statistique::new("martialite")),
+        ("intendance".to_string(), Statistique::new("intendance")),
+        ("intrigue".to_string(), Statistique::new("intrigue")),
+        ("erudition".to_string(), Statistique::new("erudition")),
+        ("prouesse".to_string(), Statistique::new("prouesse"))
+    ]);
 
 
     // dbg!(&args);
@@ -170,7 +179,8 @@ pub fn generate_personnage(parameters : Parameters) -> Personnage {
         points_personnage += education_personnage.points as i32;
 
         for bonus in education_personnage.bonus.clone() {
-            statistiques.add_bonus_to_stats(bonus);
+            let statistique = statistiques.get_mut(bonus.name.as_str()).unwrap();
+            statistique.add_bonus_to_stats(bonus);
         }
     }
 
@@ -246,7 +256,8 @@ pub fn generate_personnage(parameters : Parameters) -> Personnage {
 
     for personality in personnality_personnage.clone() {
         for bonus in personality.bonus {
-            statistiques.add_bonus_to_stats(bonus);
+            let statistique = statistiques.get_mut(bonus.name.as_str()).unwrap();
+            statistique.add_bonus_to_stats(bonus);
         }
     }
 
@@ -314,7 +325,7 @@ pub fn generate_personnage(parameters : Parameters) -> Personnage {
                 stats[index].to_string()
             };
 
-            stat_name
+            stat_name.to_string()
 
 
         } else {
@@ -322,20 +333,24 @@ pub fn generate_personnage(parameters : Parameters) -> Personnage {
             stats[index].to_string()
         };
 
-        let cout = statistiques.calcule_cout_increment(&stat_name);
+        let statistique = statistiques.get(stat_name.as_str()).unwrap();
+        let cout = statistique.calcule_cout_increment();
        
         if points_personnage+cout <= LIMIT_POINTS {
-            let num = statistiques.incremente_or_decremente_stats(&stat_name, Signe::Increment);
+            let statistique = statistiques.get_mut(stat_name.as_str()).unwrap();
+            let num = statistique.incremente_or_decremente_stats(Signe::Increment);
             points_personnage += num
         } else if points_personnage >= 390 && points_personnage < LIMIT_POINTS-1{
             // en gros si il reste entre 10 et 2 pts a attribuer autant essayer de rentabiliser un max
             // mais j'ai pas mieux que ce truc pour l'instant
             let mut bool_break = false;
             
-            for stat_name in stats.iter() {
-                let cout = statistiques.calcule_cout_increment(stat_name);
+            for stat_name in stats.clone().into_iter() {
+                let statistique = statistiques.get(stat_name).unwrap();
+                let cout = statistique.calcule_cout_increment();
                 if points_personnage+cout <= LIMIT_POINTS {
-                    let num = statistiques.incremente_or_decremente_stats(stat_name, Signe::Increment);
+                    let statistique = statistiques.get_mut(stat_name).unwrap();
+                    let num = statistique.incremente_or_decremente_stats(Signe::Increment);
                     points_personnage += num;
                     bool_break = false;
                 } else {

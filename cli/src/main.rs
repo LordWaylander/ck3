@@ -44,12 +44,9 @@ fn display_personnage(personnage: Personnage) {
     }
     
     println!(" *** statistiques ***");
-    println!("diplomatie : {}", personnage.statistiques.diplomatie.base + personnage.statistiques.diplomatie.bonus);
-    println!("martialite : {}", personnage.statistiques.martialite.base + personnage.statistiques.martialite.bonus);
-    println!("intendance : {}", personnage.statistiques.intendance.base + personnage.statistiques.intendance.bonus);
-    println!("intrigue : {}", personnage.statistiques.intrigue.base + personnage.statistiques.intrigue.bonus);
-    println!("erudition : {}", personnage.statistiques.erudition.base + personnage.statistiques.erudition.bonus);
-    println!("prouesse : {}", personnage.statistiques.prouesse.base + personnage.statistiques.prouesse.bonus);
+    for (key, val) in personnage.statistiques.iter() {
+        println!("{key} : {}", val.base + val.bonus);
+    }
 
     println!("points_totaux : {}", personnage.points_totaux);
 }

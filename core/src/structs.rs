@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{collections::HashMap, fmt};
 use rand::prelude::*;
 
 #[derive(Clone, Default)]
@@ -36,7 +36,7 @@ pub struct Personnage {
     pub age: Age,
     pub education: Education,
     pub personnality: Vec<Personality>,
-    pub statistiques: Statistiques,
+    pub statistiques: HashMap<String, Statistique>,
     pub points_totaux: u16
 }
 
@@ -122,78 +122,33 @@ pub enum Signe {
     Decrement
 }
 
-#[derive(Debug, Default, serde::Deserialize, serde::Serialize)]
-pub struct Statistiques {
-    pub diplomatie: Statistique,
-    pub martialite: Statistique,
-    pub intendance: Statistique,
-    pub intrigue: Statistique,
-    pub erudition: Statistique,
-    pub prouesse: Statistique
-}
 
-#[derive(Debug, Clone, Default, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Clone, Default, serde::Deserialize, serde::Serialize, Eq, PartialEq)]
 pub struct Statistique {
+    name: String,
     pub base: i8,
     pub bonus: i8
 }
 
 impl Statistique {
-    fn new() -> Statistique {
+    pub fn new(name: &str) -> Statistique {
         Statistique {
             // valeur de départ de tout personnage créé de base ds le jeu
+            name: String::from(name),
             base: 5,
             bonus: 0
         }
     }
-}
 
-impl Statistiques {
-    pub fn new() -> Statistiques {
-        Statistiques {
-            diplomatie : Statistique::new(),
-            martialite: Statistique::new(),
-            intendance: Statistique::new(),
-            intrigue: Statistique::new(),
-            erudition: Statistique::new(),
-            prouesse: Statistique::new()
-        }
-    }
-
-    pub fn incremente_or_decremente_stats(&mut self, stat_name: &str, signe: Signe) -> i32 {
+    pub fn incremente_or_decremente_stats(&mut self, signe: Signe) -> i32 {
         let modifier = if signe == Signe::Decrement {-1} else {1};
-        let val = match stat_name {
-            "intrigue" => {
-                self.intrigue.base = (self.intrigue.base + modifier).max(0);
-                self.intrigue.base
-            },
-            "diplomatie" => {
-                self.diplomatie.base = (self.diplomatie.base + modifier).max(0);
-                self.diplomatie.base
-            },
-            "martialite" => {
-                self.martialite.base = (self.martialite.base + modifier).max(0);
-                self.martialite.base
-            },
-            "intendance" => {
-                self.intendance.base = (self.intendance.base + modifier).max(0);
-                self.intendance.base
-            },
-            "erudition" => {
-                self.erudition.base = (self.erudition.base + modifier).max(0);
-                self.erudition.base
-            },
-            "prouesse" => {
-                self.prouesse.base = (self.prouesse.base + modifier).max(0);
-                self.prouesse.base
-            },
-            _ => panic!("erreur incremente_statst, bonus_name = {}",stat_name)
-        };
+        self.base = (self.base + modifier).max(0);
+        self.base;
 
-        if stat_name == "prouesse" {
-            Statistiques::val_prouesse(val).into()
+        if self.name == "prouesse" {
+            Statistique::val_prouesse(self.base).into()
         } else {
-            Statistiques::val_stats(val).into()
+            Statistique::val_stats(self.base).into()
         }
 
     }
@@ -220,57 +175,15 @@ impl Statistiques {
        }
     } 
 
-    pub fn calcule_cout_increment(&self, stat_name: &str) -> i32 {
-        let val = match stat_name {
-            "intrigue" => {
-                self.intrigue.base
-            },
-            "diplomatie" => {
-                self.diplomatie.base
-            },
-            "martialite" => {
-                self.martialite.base
-            },
-            "intendance" => {
-                self.intendance.base
-            },
-            "erudition" => {
-                self.erudition.base
-            },
-            "prouesse" => {
-                self.prouesse.base
-            },
-            _ => panic!("erreur calcule_cout_increment, bonus_name = {}",stat_name)
-        };
-
-        if stat_name == "prouesse" {
-            Statistiques::val_prouesse(val+1).into()
+    pub fn calcule_cout_increment(&self) -> i32 {
+        if self.name == "prouesse" {
+            Statistique::val_prouesse(self.base+1).into()
         } else {
-            Statistiques::val_stats(val+1).into()
+            Statistique::val_stats(self.base+1).into()
         }
     }
 
     pub fn add_bonus_to_stats(&mut self, bonus: Bonus) {
-        match bonus.name.as_str() {
-            "intrigue" => {
-                self.intrigue.bonus += bonus.apttitudes
-            },
-            "diplomatie" => {
-                self.diplomatie.bonus += bonus.apttitudes
-            },
-            "martialite" => {
-                self.martialite.bonus += bonus.apttitudes
-            },
-            "intendance" => {
-                self.intendance.bonus += bonus.apttitudes
-            },
-            "erudition" => {
-                self.erudition.bonus += bonus.apttitudes
-            },
-            "prouesse" => {
-                self.prouesse.bonus += bonus.apttitudes
-            },
-            _ => panic!("erreur personnalité, bonus_name = {}",bonus.name)
-        }
+        self.bonus += bonus.apttitudes;
     }
 }
