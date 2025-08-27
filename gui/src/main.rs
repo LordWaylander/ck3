@@ -21,9 +21,6 @@ fn App() -> Element {
     rsx! {
         document::Link { rel: "icon", href: FAVICON }
         document::Link { rel: "stylesheet", href: MAIN_CSS }
-        h1 {
-            "test from guin App function, if you see it, dioxus works !"
-        }
         button {
             onclick: move |_| async move {
                 match generate(
@@ -97,44 +94,42 @@ fn App() -> Element {
             div {
                 for (key, statistique) in personnage.read().statistiques.clone() {
                     div {
-                        p {"statistique name : {statistique.name}"}
-                        
+                        class:"flex",
+                        p {"{statistique.name} :"}
                         div {
-                            class:"flex",
-                            p {"points : "}
-                            div {
-                                class:"flex flex-align-items",
-                                button {
-                                    onclick: {
-                                        let key = key.clone();
-                                        move |_| {
-                                            let mut p = personnage.write();
-                                            let pts = p.statistiques.get(&key).unwrap().calcule_cout_decrement();
-                                            p.points_totaux -= pts as u16;
+                            class:"flex flex-align-items",
+                            button {
+                                style: "margin-left: 5px;margin-right: 5px;",
+                                onclick: {
+                                    let key = key.clone();
+                                    move |_| {
+                                        let mut p = personnage.write();
+                                        let pts = p.statistiques.get(&key).unwrap().calcule_cout_decrement();
+                                        p.points_totaux -= pts as u16;
 
-                                            let s = p.statistiques.get_mut(&key).unwrap();
-                                            s.base -= 1;
-                                        }
-                                    },
-                                    "-"
-                                }
-                                p {"{statistique.base + statistique.bonus}"}
-                                // p {"base {statistique.base}"}
-                                // p {"bonus {statistique.bonus}"}
-                                button {
-                                    onclick: {
-                                        let key = key.clone();
-                                        move |_| {
-                                            let mut p = personnage.write();
-                                            let pts = p.statistiques.get(&key).unwrap().calcule_cout_increment();
-                                            p.points_totaux += pts as u16;
+                                        let s = p.statistiques.get_mut(&key).unwrap();
+                                        s.base -= 1;
+                                    }
+                                },
+                                "-"
+                            }
+                            p {"{statistique.base + statistique.bonus}"}
+                            // p {"base {statistique.base}"}
+                            // p {"bonus {statistique.bonus}"}
+                            button {
+                                style: "margin-left: 5px;margin-right: 5px;",
+                                onclick: {
+                                    let key = key.clone();
+                                    move |_| {
+                                        let mut p = personnage.write();
+                                        let pts = p.statistiques.get(&key).unwrap().calcule_cout_increment();
+                                        p.points_totaux += pts as u16;
 
-                                            let s = p.statistiques.get_mut(&key).unwrap();
-                                            s.base += 1;
-                                        }
-                                    },
-                                    "+"
-                                }
+                                        let s = p.statistiques.get_mut(&key).unwrap();
+                                        s.base += 1;
+                                    }
+                                },
+                                "+"
                             }
                         }
                     }
