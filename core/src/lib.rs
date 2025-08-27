@@ -1,5 +1,5 @@
 pub mod structs;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use structs::*;
 use rand::prelude::*;
 
@@ -66,7 +66,7 @@ pub fn generate_personnage(parameters : Parameters) -> Personnage{
    
     let mut rng = rand::rng();
 
-    let mut statistiques: HashMap<String, Statistique> = HashMap::from([
+    let mut statistiques: BTreeMap<String, Statistique> = BTreeMap::from([
         ("diplomatie".to_string(), Statistique::new("diplomatie")),
         ("martialite".to_string(), Statistique::new("martialite")),
         ("intendance".to_string(), Statistique::new("intendance")),

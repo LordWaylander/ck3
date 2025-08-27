@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt};
+use std::{collections::BTreeMap, fmt};
 use rand::prelude::*;
 
 #[derive(Clone, Default)]
@@ -36,7 +36,7 @@ pub struct Personnage {
     pub age: Age,
     pub education: Education,
     pub personnality: Vec<Personality>,
-    pub statistiques: HashMap<String, Statistique>,
+    pub statistiques: BTreeMap<String, Statistique>,
     pub points_totaux: u16
 }
 

@@ -68,7 +68,7 @@ fn App() -> Element {
                 };
             },
             option { disabled: true, selected: true, "Choose Your level education" }
-            option { value: 0, "0" }
+            //option { value: 0, "0" }
             option { value: 1, "1" }
             option { value: 2, "2" }
             option { value: 3, "3" }
