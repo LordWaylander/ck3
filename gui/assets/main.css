@@ -79,3 +79,11 @@ body {
 #echo>p {
     margin: 20px 0px 0px auto;
 }
+
+.flex {
+    display: flex;
+}
+.flex-align-items {
+    align-items: center;
+}
+

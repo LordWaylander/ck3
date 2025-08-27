@@ -125,7 +125,7 @@ pub enum Signe {
 
 #[derive(Debug, Clone, Default, serde::Deserialize, serde::Serialize, Eq, PartialEq)]
 pub struct Statistique {
-    name: String,
+    pub name: String,
     pub base: i8,
     pub bonus: i8
 }
@@ -143,7 +143,6 @@ impl Statistique {
     pub fn incremente_or_decremente_stats(&mut self, signe: Signe) -> i32 {
         let modifier = if signe == Signe::Decrement {-1} else {1};
         self.base = (self.base + modifier).max(0);
-        self.base;
 
         if self.name == "prouesse" {
             Statistique::val_prouesse(self.base).into()
@@ -180,6 +179,14 @@ impl Statistique {
             Statistique::val_prouesse(self.base+1).into()
         } else {
             Statistique::val_stats(self.base+1).into()
+        }
+    }
+
+    pub fn calcule_cout_decrement(&self) -> i32 {
+        if self.name == "prouesse" {
+            Statistique::val_prouesse(self.base).into()
+        } else {
+            Statistique::val_stats(self.base).into()
         }
     }
 

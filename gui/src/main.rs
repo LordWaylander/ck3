@@ -83,23 +83,63 @@ fn App() -> Element {
 
         div {
             p { "personnage généré : "}
+            p {"points : {personnage.read().points_totaux}"}
             p {"age : {personnage.read().age}"}
             p {"education : {personnage.read().education.name}"}
             p {"education level : {personnage.read().education.level}"}
 
             ul {
                 for personalit in personnage.read().personnality.iter() {
-                    li {"personnamlité : {personalit.name}"}
+                    li {"personnalité : {personalit.name}"}
                 }
             }
 
-            p {"diplomatie  : {personnage.read().statistiques.diplomatie.base + personnage.read().statistiques.diplomatie.bonus}"}
-            p {"martialite  : {personnage.read().statistiques.martialite.base + personnage.read().statistiques.martialite.bonus}"}
-            p {"intendance  : {personnage.read().statistiques.intendance.base + personnage.read().statistiques.intendance.bonus}"}
-            p {"intrigue  : {personnage.read().statistiques.intrigue.base + personnage.read().statistiques.intrigue.bonus}"}
-            p {"erudition  : {personnage.read().statistiques.erudition.base + personnage.read().statistiques.erudition.bonus}"}
-            p {"prouesse  : {personnage.read().statistiques.prouesse.base + personnage.read().statistiques.prouesse.bonus}"}
+            div {
+                for (key, statistique) in personnage.read().statistiques.clone() {
+                    div {
+                        p {"statistique name : {statistique.name}"}
+                        
+                        div {
+                            class:"flex",
+                            p {"points : "}
+                            div {
+                                class:"flex flex-align-items",
+                                button {
+                                    onclick: {
+                                        let key = key.clone();
+                                        move |_| {
+                                            let mut p = personnage.write();
+                                            let pts = p.statistiques.get(&key).unwrap().calcule_cout_decrement();
+                                            p.points_totaux -= pts as u16;
 
+                                            let s = p.statistiques.get_mut(&key).unwrap();
+                                            s.base -= 1;
+                                        }
+                                    },
+                                    "-"
+                                }
+                                p {"{statistique.base + statistique.bonus}"}
+                                // p {"base {statistique.base}"}
+                                // p {"bonus {statistique.bonus}"}
+                                button {
+                                    onclick: {
+                                        let key = key.clone();
+                                        move |_| {
+                                            let mut p = personnage.write();
+                                            let pts = p.statistiques.get(&key).unwrap().calcule_cout_increment();
+                                            p.points_totaux += pts as u16;
+
+                                            let s = p.statistiques.get_mut(&key).unwrap();
+                                            s.base += 1;
+                                        }
+                                    },
+                                    "+"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         // p {
