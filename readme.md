@@ -15,5 +15,3 @@ cargo make desktop
 
 cli -> ok
 web / desktop -> wip
-
-test
