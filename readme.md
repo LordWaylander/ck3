@@ -6,8 +6,8 @@ prérequis :
 
 ```
 commandes :
-cargo make help 
-cargo make cli 
+cargo make help
+cargo make cli
 cargo make cli-prod
 cargo make web
 cargo make desktop
@@ -16,5 +16,4 @@ cargo make desktop
 cli -> ok
 web / desktop -> wip
 
-
-
+test
