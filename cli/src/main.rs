@@ -15,7 +15,7 @@ pub struct Args {
     pub level: Option<i8>,
     /// 0 to 70 years old
     #[arg(short, long)]
-    pub age: Option<i8>
+    pub age: Option<i8>,
 }
 
 fn get_params() -> Parameters {
@@ -24,7 +24,7 @@ fn get_params() -> Parameters {
     let params = Parameters {
         education: args.education,
         level: args.level,
-        age: args.age
+        age: args.age,
     };
 
     params
@@ -42,7 +42,7 @@ fn display_personnage(personnage: Personnage) {
     for personalit in personnage.personnality {
         println!("{}", personalit.name);
     }
-    
+
     println!(" *** statistiques ***");
     for (key, val) in personnage.statistiques.iter() {
         println!("{key} : {}", val.base + val.bonus);

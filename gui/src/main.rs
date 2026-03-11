@@ -1,5 +1,5 @@
-use dioxus::prelude::*;
 use core::structs::*;
+use dioxus::prelude::*;
 mod server;
 use server::generate;
 
@@ -12,7 +12,6 @@ pub fn main() {
 
 #[component]
 fn App() -> Element {
-
     let mut education = use_signal(|| None);
     let mut level = use_signal(|| None);
     let mut age = use_signal(|| None);
@@ -39,7 +38,7 @@ fn App() -> Element {
         }
 
 
-        
+
         div {
             select { onchange: move |e| {
                     let mut education_mutable_reference = education.write();

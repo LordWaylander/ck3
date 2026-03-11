@@ -1,18 +1,17 @@
-use dioxus::prelude::*;
 use core::generate_personnage;
 use core::structs::*;
+use dioxus::prelude::*;
 
 #[server]
 pub async fn generate(
     education: Option<String>,
     level: Option<i8>,
-    age: Option<i8>
+    age: Option<i8>,
 ) -> Result<Personnage, ServerFnError> {
-
     let params = Parameters {
         education,
         level,
-        age
+        age,
     };
 
     let pers = generate_personnage(params);
