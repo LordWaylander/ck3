@@ -1,5 +1,5 @@
 use clap::Parser;
-use core::generate_personnage;
+use core;
 
 use core::structs::*;
 
@@ -53,6 +53,6 @@ fn display_personnage(personnage: Personnage) {
 
 pub fn main() {
     let params = get_params();
-    let personnage = generate_personnage(params);
+    let personnage = core::generate_personnage(params);
     display_personnage(personnage);
 }

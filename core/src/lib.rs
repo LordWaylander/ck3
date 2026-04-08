@@ -54,8 +54,6 @@ fn define_personality(
 }
 
 pub fn generate_personnage(parameters: Parameters) -> Personnage {
-    // pour le web, normalement on envoie rien (none)
-    // mais si en web version, faut aller chercher dans les assets et l'envoyer en paramètre
     let datas: (Vec<Education>, Vec<Personality>) = load_data();
     let educations: Vec<Education> = datas.0;
     let personalities: Vec<Personality> = datas.1;
@@ -72,18 +70,16 @@ pub fn generate_personnage(parameters: Parameters) -> Personnage {
     ]);
 
     // dbg!(&args);
-    let age: Age;
     let mut educs_possible: Vec<Education> = educations;
 
     let education_level_is_some = parameters.level.is_some();
     let education_is_some = parameters.education.is_some();
-    let age_is_some = parameters.age.is_some();
 
-    if age_is_some {
-        age = Age(parameters.age.unwrap());
+    let age = if let Some(age) = parameters.age {
+        Age(age)
     } else {
-        age = Age::random();
-    }
+        Age::random()
+    };
 
     //dbg!(&age);
 
@@ -148,6 +144,7 @@ pub fn generate_personnage(parameters: Parameters) -> Personnage {
                 .into_iter()
                 .filter(|educ| educ.level == 0)
                 .collect();
+
             let idx = rng.random_range(0..educs_possible.len());
             education_personnage = Some(educs_possible[idx].clone());
         }
@@ -183,7 +180,8 @@ pub fn generate_personnage(parameters: Parameters) -> Personnage {
             }
         }
     } else {
-        education_personnage = None;
+        todo!("age < 2");
+        //education_personnage = None;
     }
 
     // dbg!(&education_personnage);
