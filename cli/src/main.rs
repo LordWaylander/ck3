@@ -1,7 +1,20 @@
 use clap::Parser;
 use core;
-
 use core::structs::*;
+mod app;
+mod ui;
+
+use ratatui::{
+    backend::{Backend},
+    crossterm::{
+        event::{self, Event, KeyCode},
+        execute,
+        terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+    },
+    Terminal,
+    prelude::CrosstermBackend
+};
+use std::{process, io, error::Error};
 
 /// Simple program to generate a ck3 player
 #[derive(Parser, Debug, Default)]
@@ -30,29 +43,50 @@ fn get_params() -> Parameters {
     params
 }
 
-fn display_personnage(personnage: Personnage) {
-    println!(" *** age ***");
-    println!("age : {}", personnage.age);
+pub fn main() -> Result<(), Box<dyn Error>> {
+    let stdout = io::stdout();
+    let backend = CrosstermBackend::new(stdout);
+    let mut terminal = Terminal::new(backend)?;
 
-    println!(" *** education ***");
-    println!("education : {}", personnage.education.name);
-    println!("level : {}", personnage.education.level);
 
-    println!(" *** personnality ***");
-    for personalit in personnage.personnality {
-        println!("{}", personalit.name);
-    }
+    let params = get_params();
+    let mut app = app::App::new(params);
+    //let res = ratatui::run(|terminal| app.run(terminal));
 
-    println!(" *** statistiques ***");
-    for (key, val) in personnage.statistiques.iter() {
-        println!("{key} : {}", val.base + val.bonus);
-    }
 
-    println!("points_totaux : {}", personnage.points_totaux);
+    let res = run_app(&mut terminal, &mut app);
+    // if let Ok(do_print) = res {
+    //     if do_print {
+    //         app.print_json()?;
+    //     }
+    // } else if let Err(err) = res {
+    //     println!("{err:?}");
+    // }
+
+
+    Ok(())
 }
 
-pub fn main() {
-    let params = get_params();
-    let personnage = core::generate_personnage(params);
-    display_personnage(personnage);
+fn run_app<B: Backend>(terminal: &mut Terminal<B>, app: &mut app::App) -> io::Result<bool>
+where
+    io::Error: From<B::Error>,
+{
+    while !app.exit {
+        terminal.draw(|frame| ui::ui(frame, app))?;
+        if let Event::Key(key) = event::read()? {
+            if key.kind == event::KeyEventKind::Release {
+                // Skip events that are not KeyEventKind::Press
+                continue;
+            }
+            match key.code {
+                KeyCode::Char('q') => {
+                    app.exit();
+                    //return Ok(true);
+                    //process::exit(1);
+                }
+                _ => {}
+            }
+        }
+    }
+    Ok(true)
 }

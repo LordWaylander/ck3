@@ -11,3 +11,7 @@ path = "src/main.rs"
 [dependencies]
 clap = { version = "4.5.41", features = ["derive"] }
 core = { path = "../core" }
+crossterm = "0.29.0"
+ratatui = "0.30.0"
+serde = {version = "1.0.219", features = ["derive"]}
+serde_json = "1.0.140"
