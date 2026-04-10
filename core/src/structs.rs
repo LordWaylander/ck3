@@ -52,7 +52,7 @@ impl Default for Age {
 impl Age {
     pub fn random() -> Self {
         let mut rng = rand::rng();
-        let age = rng.random_range(0..=70);
+        let age = rng.random_range(3..=70);
         Age(age)
     }
     pub fn get_score_age(&self) -> i32 {

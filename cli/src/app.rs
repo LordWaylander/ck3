@@ -20,6 +20,11 @@ impl App {
     pub fn exit(&mut self) {
         self.exit = true;
     }
+    pub fn save(&mut self) -> Result<(), std::io::Error> {
+        todo!("à implémenter plus tard");
+        // use std::io::ErrorKind;
+        // Err(std::io::Error::new(ErrorKind::Other, "oh no!"))
+    }
     // fn display_personnage(self) {
     //     println!(" *** age ***");
     //     println!("age : {}", self.personnage.age);

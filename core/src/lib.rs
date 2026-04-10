@@ -101,6 +101,7 @@ pub fn generate_personnage(parameters: Parameters) -> Personnage {
                         .filter(|educ| educ.name == education_choosen)
                         .collect();
                 } else {
+                    // see Age::random()
                     todo!("age < 2");
                     // y'a pas d'éducations possibles
                     // car <2 tu y a pas le droit, c'est le jeu qui décidera
