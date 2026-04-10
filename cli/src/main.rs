@@ -7,7 +7,7 @@ mod ui;
 use ratatui::{
     backend::{Backend},
     crossterm::{
-        event::{self, Event, KeyCode},
+        event::{self, Event, KeyCode, DisableMouseCapture, EnableMouseCapture},
         execute,
         terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
     },
@@ -44,7 +44,9 @@ fn get_params() -> Parameters {
 }
 
 pub fn main() -> Result<(), Box<dyn Error>> {
-    let stdout = io::stdout();
+    enable_raw_mode()?;
+    let mut stdout = io::stdout();
+    execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
@@ -55,6 +57,13 @@ pub fn main() -> Result<(), Box<dyn Error>> {
 
 
     let res = run_app(&mut terminal, &mut app);
+    disable_raw_mode()?;
+        execute!(
+        terminal.backend_mut(),
+        LeaveAlternateScreen,
+        DisableMouseCapture
+    )?;
+    terminal.show_cursor()?;
     // if let Ok(do_print) = res {
     //     if do_print {
     //         app.print_json()?;
