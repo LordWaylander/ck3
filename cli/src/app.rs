@@ -1,4 +1,5 @@
 use core::structs::{Parameters, Personnage};
+use std::io::ErrorKind;
 
 
 // #[derive(Debug)]
@@ -31,9 +32,9 @@ impl App {
         self.exit = true;
     }
     pub fn save(&mut self) -> Result<(), std::io::Error> {
-        todo!("à implémenter plus tard");
+        //todo!("à implémenter plus tard");
         // use std::io::ErrorKind;
-        // Err(std::io::Error::new(ErrorKind::Other, "oh no!"))
+        Err(std::io::Error::new(ErrorKind::Other, "à implémenter plus tard"))
     }
     // fn display_personnage(self) {
     //     println!(" *** age ***");

@@ -39,36 +39,12 @@ pub fn ui(frame: &mut Frame, app: &App) {
             Constraint::Ratio(1, 3),
         ])
         .split(frame.area());
-
-        
-
-    let block: Block<'_> = Block::default()
-        .borders(Borders::ALL)
-        .style(Style::default());
-
-    let title: Paragraph<'_> = Paragraph::new(Text::styled(
-        "Generator CK3 Personnage",
-        Style::default().fg(Color::Green),
-    ))
-    .block(block);
-
-    frame.render_widget(title, chunks[0]);
     
+    header(chunks[0], frame);
     fill_chunk_1(chunks[1], app, frame);
+    footer(chunks[2], frame);
 
-    let block: Block<'_> = Block::default()
-    .borders(Borders::ALL)
-    .style(Style::default());
-
-    let title: Paragraph<'_> = Paragraph::new(Text::styled(
-        "footer",
-        Style::default().fg(Color::Green),
-    ))
-    .block(block);
-
-    frame.render_widget(title, chunks[2]);
-
-    if let CurrentScreen::Exit = app.current_screen {
+        if let CurrentScreen::Exit = app.current_screen {
         //frame.render_widget(Clear, frame.area());
 
         let popup_block = Block::bordered()
@@ -88,15 +64,45 @@ pub fn ui(frame: &mut Frame, app: &App) {
         let area = centered_rect(60, 25, frame.area());
         frame.render_widget(exit_paragraph, area);
     }
+
 }
 
-fn fill_chunk_1(chunk: Rect, app: &App, frame: &mut Frame) {
+fn header(chunk1: Rect, frame: &mut Frame) {
+
+    let block: Block<'_> = Block::default()
+        .borders(Borders::ALL)
+        .style(Style::default());
+
+    let title: Paragraph<'_> = Paragraph::new(Text::styled(
+        "Generator CK3 Personnage",
+        Style::default().fg(Color::Green),
+    ))
+    .block(block);
+
+    frame.render_widget(title, chunk1);
+}
+
+fn footer(chunk2: Rect, frame: &mut Frame) {
+    let block: Block<'_> = Block::default()
+    .borders(Borders::ALL)
+    .style(Style::default());
+
+    let title: Paragraph<'_> = Paragraph::new(Text::styled(
+        "q => quit \ns => save",
+        Style::default().fg(Color::Green),
+    ))
+    .block(block);
+
+    frame.render_widget(title, chunk2);
+}
+
+fn fill_chunk_1(chunk1: Rect, app: &App, frame: &mut Frame) {
     let chunks_2: std::rc::Rc<[Rect]> = 
         Layout::horizontal([
                 Constraint::Ratio(1, 3),
                 Constraint::Ratio(1, 3),
                 Constraint::Ratio(1, 3),
-        ]).split(chunk);
+        ]).split(chunk1);
 
 /*------- */
     let block: Block<'_> = Block::default()

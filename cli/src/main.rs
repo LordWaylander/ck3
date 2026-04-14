@@ -16,7 +16,7 @@ use ratatui::{
     Terminal,
     prelude::CrosstermBackend
 };
-use std::{process, io, error::Error};
+use std::{io, error::Error};
 
 /// Simple program to generate a ck3 player
 #[derive(Parser, Debug, Default)]
@@ -62,7 +62,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     terminal.show_cursor()?;
 
     if let Err(err) = res {
-        println!("{err:?}");
+        println!("kind : {}, {}", err.kind(), err);
     }
 
     Ok(())
