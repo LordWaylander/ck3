@@ -30,6 +30,7 @@ fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
 }
 
 pub fn ui(frame: &mut Frame, app: &App) {
+    frame.render_widget(Clear, frame.area());
 
     let chunks: std::rc::Rc<[Rect]> = Layout::default()
         .direction(Direction::Vertical)
@@ -45,7 +46,7 @@ pub fn ui(frame: &mut Frame, app: &App) {
     footer(chunks[2], frame);
 
     if let CurrentScreen::Exit = app.current_screen {
-        //frame.render_widget(Clear, frame.area());
+        //
 
         let popup_block = Block::bordered()
             .title("Y/N")
