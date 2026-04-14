@@ -84,7 +84,7 @@ where
                     if key.modifiers.contains(KeyModifiers::CONTROL) && (key.code == KeyCode::Char('q') || key.code == KeyCode::Char('c'))  {
                         app.current_screen = CurrentScreen::Exit;
                     }
-                    if key.code == KeyCode::Char('s') {
+                    if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('s') {
                         app.current_screen = CurrentScreen::Save;
                         // app.save()?;
                     }
