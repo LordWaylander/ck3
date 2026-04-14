@@ -44,7 +44,7 @@ pub fn ui(frame: &mut Frame, app: &App) {
     fill_chunk_1(chunks[1], app, frame);
     footer(chunks[2], frame);
 
-        if let CurrentScreen::Exit = app.current_screen {
+    if let CurrentScreen::Exit = app.current_screen {
         //frame.render_widget(Clear, frame.area());
 
         let popup_block = Block::bordered()
