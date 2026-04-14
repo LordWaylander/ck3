@@ -1,8 +1,9 @@
 use ratatui::layout::{Rect, Layout, Direction, Constraint};
 use ratatui::Frame;
-use ratatui::widgets::{Block, Borders, Paragraph, ListItem, List};
+use ratatui::widgets::{Block, Borders, Paragraph, ListItem, List, Wrap, Clear};
 use ratatui::style::{Style, Color};
 use ratatui::text::{Text, Line, Span};
+use crate::app::CurrentScreen;
 
 use crate::app::App;
 
@@ -66,6 +67,27 @@ pub fn ui(frame: &mut Frame, app: &App) {
     .block(block);
 
     frame.render_widget(title, chunks[2]);
+
+    if let CurrentScreen::Exit = app.current_screen {
+        //frame.render_widget(Clear, frame.area());
+
+        let popup_block = Block::bordered()
+            .title("Y/N")
+            .borders(Borders::NONE)
+            .style(Style::new().red().on_black().bold().italic());
+
+        let exit_text = Text::styled(
+            "Are you sure do you want Exit app ?",
+            Style::default().fg(Color::Red),
+        );
+
+        let exit_paragraph = Paragraph::new(exit_text)
+            .block(popup_block)
+            .wrap(Wrap { trim: false });
+
+        let area = centered_rect(60, 25, frame.area());
+        frame.render_widget(exit_paragraph, area);
+    }
 }
 
 fn fill_chunk_1(chunk: Rect, app: &App, frame: &mut Frame) {

@@ -1,9 +1,18 @@
 use core::structs::{Parameters, Personnage};
 
-#[derive(Debug, Default)]
+
+// #[derive(Debug)]
+pub enum CurrentScreen {
+    Main,
+    Exit,
+    Save
+}
+
+// #[derive(Debug)]
 pub struct App {
     pub personnage: Personnage,
     pub exit: bool,
+    pub current_screen: CurrentScreen
 }
 
 impl App {
@@ -12,7 +21,8 @@ impl App {
 
         App {
             personnage,
-            exit: false
+            exit: false,
+            current_screen: CurrentScreen::Main
 
         }
 

@@ -1,9 +1,11 @@
+use app::CurrentScreen;
 use clap::Parser;
 use core;
 use core::structs::*;
 mod app;
 mod ui;
 
+use crossterm::event::KeyModifiers;
 use ratatui::{
     backend::{Backend},
     crossterm::{
@@ -77,16 +79,30 @@ where
                 // Skip events that are not KeyEventKind::Press
                 continue;
             }
-            match key.code {
-                KeyCode::Char('q') => {
-                    app.exit();
-                    //return Ok(true);
-                    //process::exit(1);
+            match app.current_screen {
+                CurrentScreen::Main => {
+                    if key.modifiers.contains(KeyModifiers::CONTROL) && (key.code == KeyCode::Char('q') || key.code == KeyCode::Char('c'))  {
+                        app.current_screen = CurrentScreen::Exit;
+                    }
+                    if key.code == KeyCode::Char('s') {
+                        app.current_screen = CurrentScreen::Save;
+                        // app.save()?;
+                    }
                 }
-                KeyCode::Char('s') => {
-                    app.save()?;
+                CurrentScreen::Exit => match key.code {
+                    KeyCode::Char('y') => {
+                        return Ok(app.exit());
+                    }
+                    KeyCode::Char('n') => {
+                        app.current_screen = CurrentScreen::Main;
+                        //return Ok(false);
+
+                    }
+                    _ => {}
                 }
-                _ => {}
+                CurrentScreen::Save => {
+
+                }
             }
         }
     }
