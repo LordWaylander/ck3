@@ -99,7 +99,6 @@ where
                     _ => {}
                 }
                 CurrentScreen::Save => {
-                    println!("save a faire");
                     app.exit()
                 }
             }

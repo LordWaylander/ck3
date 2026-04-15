@@ -45,25 +45,39 @@ pub fn ui(frame: &mut Frame, app: &App) {
     footer(chunks[2], frame);
 
     if let CurrentScreen::Exit = app.current_screen {
-        let popup_block = Block::bordered()
-            .title("Exit App")
-            .borders(Borders::NONE)
-            .style(Style::new().red().on_black().bold().italic());
-
-        let exit_text = Text::styled(
-            "Are you sure do you want Exit app ? (y / n)",
-            Style::default().fg(Color::Red),
-        );
-
-        let exit_paragraph = Paragraph::new(exit_text)
-            .block(popup_block)
-            .wrap(Wrap { trim: false });
+        let popup = popup("Exit App", "Are you sure do you want Exit app ? (y / n)");
 
         let area = centered_rect(60, 25, frame.area());
         frame.render_widget(Clear, area);
-        frame.render_widget(exit_paragraph, area);
+        frame.render_widget(popup, area);
     }
 
+    if let CurrentScreen::Save = app.current_screen {
+    let popup = popup("Save personnage", "TODO, input with filename ? or save directly with timestamp ?");
+
+    let area = centered_rect(60, 25, frame.area());
+    frame.render_widget(Clear, area);
+    frame.render_widget(popup, area);
+    }
+
+}
+
+fn popup<'a>(title: &'a str, text: &'a str) -> Paragraph<'a> {
+    let popup_block = Block::bordered()
+        .title(title)
+        .borders(Borders::NONE)
+        .style(Style::new().red().on_black().bold().italic());
+
+    let text = Text::styled(
+        text,
+        Style::default().fg(Color::Red),
+    );
+
+    let paragraph = Paragraph::new(text)
+        .block(popup_block)
+        .wrap(Wrap { trim: false });
+
+    paragraph
 }
 
 fn header(chunk1: Rect, frame: &mut Frame) {
