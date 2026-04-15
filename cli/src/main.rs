@@ -91,17 +91,16 @@ where
                 }
                 CurrentScreen::Exit => match key.code {
                     KeyCode::Char('y') => {
-                        return Ok(app.exit());
+                        app.exit()
                     }
                     KeyCode::Char('n') => {
                         app.current_screen = CurrentScreen::Main;
-                        //return Ok(false);
-
                     }
                     _ => {}
                 }
                 CurrentScreen::Save => {
-
+                    println!("save a faire");
+                    app.exit()
                 }
             }
         }

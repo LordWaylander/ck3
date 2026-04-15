@@ -30,33 +30,28 @@ fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
 }
 
 pub fn ui(frame: &mut Frame, app: &App) {
-    //frame.render_widget(Clear, frame.area());
 
-    if let CurrentScreen::Main = app.current_screen {
-        let chunks: std::rc::Rc<[Rect]> = Layout::default()
-            .direction(Direction::Vertical)
-            .constraints([
-                Constraint::Ratio(1, 3),
-                Constraint::Ratio(1, 3),
-                Constraint::Ratio(1, 3),
-            ])
-            .split(frame.area());
-        
-        header(chunks[0], frame);
-        fill_chunk_1(chunks[1], app, frame);
-        footer(chunks[2], frame);
-    }
+    let chunks: std::rc::Rc<[Rect]> = Layout::default()
+    .direction(Direction::Vertical)
+    .constraints([
+        Constraint::Ratio(1, 3),
+        Constraint::Ratio(1, 3),
+        Constraint::Ratio(1, 3),
+    ])
+    .split(frame.area());
+
+    header(chunks[0], frame);
+    fill_chunk_1(chunks[1], app, frame);
+    footer(chunks[2], frame);
 
     if let CurrentScreen::Exit = app.current_screen {
-        // frame.render_widget(Clear, frame.area());
-
         let popup_block = Block::bordered()
-            .title("Y/N")
+            .title("Exit App")
             .borders(Borders::NONE)
             .style(Style::new().red().on_black().bold().italic());
 
         let exit_text = Text::styled(
-            "Are you sure do you want Exit app ?",
+            "Are you sure do you want Exit app ? (y / n)",
             Style::default().fg(Color::Red),
         );
 
@@ -65,6 +60,7 @@ pub fn ui(frame: &mut Frame, app: &App) {
             .wrap(Wrap { trim: false });
 
         let area = centered_rect(60, 25, frame.area());
+        frame.render_widget(Clear, area);
         frame.render_widget(exit_paragraph, area);
     }
 
