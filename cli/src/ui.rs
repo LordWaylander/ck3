@@ -30,6 +30,7 @@ fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
 }
 
 pub fn ui(frame: &mut Frame, app: &App) {
+    frame.render_widget(Clear, frame.area());
 
     let chunks: std::rc::Rc<[Rect]> = Layout::default()
     .direction(Direction::Vertical)
@@ -42,7 +43,30 @@ pub fn ui(frame: &mut Frame, app: &App) {
 
     header(chunks[0], frame);
     fill_chunk_1(chunks[1], app, frame);
-    footer(chunks[2], frame);
+
+
+    let content_footer = match app.current_screen {
+        CurrentScreen::Main => {
+            vec![
+                Line::from("CTRL + Q => quit"),
+                Line::from("CTRL + S => save in file"),
+                Line::from("CTRL + L => load a save file"),
+                Line::from("CTRL + R => regenerate personnage")
+            ]
+        },
+        CurrentScreen::Exit => {
+            vec![
+                Line::from("Y => quit app"),
+                Line::from("N => back to main menu"),
+            ]
+        },
+        CurrentScreen::Save => {
+            vec![
+                Line::from("ESC => back to main menu"),
+            ]
+        }
+    };
+    footer(chunks[2], frame, content_footer);
 
     if let CurrentScreen::Exit = app.current_screen {
         let popup = popup("Exit App", "Are you sure do you want Exit app ? (y / n)");
@@ -116,15 +140,14 @@ fn header(chunk1: Rect, frame: &mut Frame) {
     frame.render_widget(title, chunk1);
 }
 
-fn footer(chunk2: Rect, frame: &mut Frame) {
+fn footer(chunk2: Rect, frame: &mut Frame, content: Vec<Line<'_>>) {
     let block: Block<'_> = Block::default()
     .borders(Borders::ALL)
     .style(Style::default());
 
-    let title: Paragraph<'_> = Paragraph::new(Text::styled(
-        "CTRL + Q => quit \nCTRL + S => save in file",
-        Style::default().fg(Color::Green),
-    ))
+    let title: Paragraph<'_> = Paragraph::new(Text::from(
+        content).patch_style(Style::default().fg(Color::Green))
+    )
     .block(block);
 
     frame.render_widget(title, chunk2);
@@ -142,19 +165,15 @@ fn fill_chunk_1(chunk1: Rect, app: &App, frame: &mut Frame) {
     let block: Block<'_> = Block::default()
     .style(Style::default());
 
-    let t = format!(
-r#"Age : {},
-education : {}, niveau : {},
-points totaux : {}"#, 
-        app.personnage.age,
-        app.personnage.education.name, app.personnage.education.level,
-        app.personnage.points_totaux
-    );
+    let t = vec![
+        Line::from(format!("Age : {}", app.personnage.age)),
+        Line::from(format!("education : {}, niveau : {}", app.personnage.education.name, app.personnage.education.level)),
+        Line::from(format!("points totaux : {}", app.personnage.points_totaux)),
+    ];
 
-    let text: Paragraph<'_> = Paragraph::new(Text::styled(
-        t,
-        Style::default().fg(Color::Yellow),
-    ))
+    let text: Paragraph<'_> = Paragraph::new(Text::from(
+        t).patch_style(Style::default().fg(Color::Yellow))
+    )
     .block(block);
     frame.render_widget(text, chunks_2[0]);
 /*------- */

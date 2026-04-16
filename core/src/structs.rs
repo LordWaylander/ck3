@@ -1,7 +1,7 @@
 use rand::prelude::*;
 use std::{collections::BTreeMap, fmt};
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default,Debug)]
 pub struct Parameters {
     pub education: Option<String>,
     pub level: Option<i8>,

@@ -88,6 +88,12 @@ where
                         app.current_screen = CurrentScreen::Save;
                         // app.save()?;
                     }
+                    if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('r') {
+                        let p =get_params();
+                        //println!("{:?}", p);
+                        app.personnage = core::generate_personnage(p);
+                        // app.save()?;
+                    }
                 }
                 CurrentScreen::Exit => match key.code {
                     KeyCode::Char('y') => {

@@ -7,6 +7,11 @@ command = "cargo"
 args = ["run", "--package", "cli"]
 workspace = false
 
+[tasks.cli-prod]
+command = "cargo"
+args = ["build", "--package", "cli"]
+workspace = false
+
 [tasks.web]
 command = "dx"
 args = ["serve", "--platform", "web", "--package", "gui"]
