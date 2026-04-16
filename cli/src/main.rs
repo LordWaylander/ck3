@@ -7,7 +7,7 @@ mod ui;
 
 use crossterm::event::KeyModifiers;
 use ratatui::{
-    backend::{Backend},
+    backend::Backend,
     crossterm::{
         event::{self, Event, KeyCode, DisableMouseCapture, EnableMouseCapture},
         execute,
@@ -99,7 +99,15 @@ where
                     _ => {}
                 }
                 CurrentScreen::Save => {
-                    app.exit()
+                    match key.code {
+                        KeyCode::Enter => app.save()?,
+                        KeyCode::Char(to_insert) => app.enter_char(to_insert),
+                        KeyCode::Backspace => app.delete_char(),
+                        KeyCode::Left => app.move_cursor_left(),
+                        KeyCode::Right => app.move_cursor_right(),
+                        KeyCode::Esc => app.current_screen = CurrentScreen::Main,
+                        _ => {}
+                    }
                 }
             }
         }

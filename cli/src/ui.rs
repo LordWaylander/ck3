@@ -53,11 +53,32 @@ pub fn ui(frame: &mut Frame, app: &App) {
     }
 
     if let CurrentScreen::Save = app.current_screen {
-    let popup = popup("Save personnage", "TODO, input with filename ? or save directly with timestamp ?");
+        // let popup = popup("Save personnage", "TODO, input with filename ? or save directly with timestamp ?");
 
-    let area = centered_rect(60, 25, frame.area());
-    frame.render_widget(Clear, area);
-    frame.render_widget(popup, area);
+        let popup_block = Block::default()
+        .title("Enter the filename : ")
+        .borders(Borders::NONE)
+        .style(Style::default().bg(Color::DarkGray));
+
+        let area = centered_rect(60, 40, frame.area());
+        frame.render_widget(Clear, area);
+        frame.render_widget(popup_block, area);
+
+        let input_area = centered_rect(60, 25, area);
+
+        let input = Paragraph::new(app.filename.as_str())
+        .style(Style::default().fg(Color::Yellow))
+        .block(Block::bordered().title("filename"));
+        frame.render_widget(input, input_area);
+
+        use ratatui::layout::Position;
+        frame.set_cursor_position(Position::new(
+            // Draw the cursor at the current position in the input field.
+            // This position can be controlled via the left and right arrow key
+            input_area.x + app.character_index as u16 + 1,
+            // Move one line down, from the border to the input line
+            input_area.y + 1,
+        ));
     }
 
 }
@@ -101,7 +122,7 @@ fn footer(chunk2: Rect, frame: &mut Frame) {
     .style(Style::default());
 
     let title: Paragraph<'_> = Paragraph::new(Text::styled(
-        "CTRL + Q => quit \nCTRL + S => save",
+        "CTRL + Q => quit \nCTRL + S => save in file",
         Style::default().fg(Color::Green),
     ))
     .block(block);
