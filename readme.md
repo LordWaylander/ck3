@@ -13,5 +13,5 @@ cargo make web
 cargo make desktop
 ```
 
-cli -> ok
+cli -> ok (interface wip)
 web / desktop -> wip
