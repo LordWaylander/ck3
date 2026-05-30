@@ -89,7 +89,7 @@ where
                         // app.save()?;
                     }
                     if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('r') {
-                        let p =get_params();
+                        let p = get_params();
                         //println!("{:?}", p);
                         app.personnage = core::generate_personnage(p);
                         // app.save()?;
