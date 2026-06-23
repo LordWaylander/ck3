@@ -1,7 +1,22 @@
+use app::CurrentScreen;
 use clap::Parser;
 use core;
-
 use core::structs::*;
+mod app;
+mod ui;
+
+use crossterm::event::KeyModifiers;
+use ratatui::{
+    backend::Backend,
+    crossterm::{
+        event::{self, Event, KeyCode, DisableMouseCapture, EnableMouseCapture},
+        execute,
+        terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
+    },
+    Terminal,
+    prelude::CrosstermBackend
+};
+use std::{io, error::Error};
 
 /// Simple program to generate a ck3 player
 #[derive(Parser, Debug, Default)]
@@ -30,29 +45,90 @@ fn get_params() -> Parameters {
     params
 }
 
-fn display_personnage(personnage: Personnage) {
-    println!(" *** age ***");
-    println!("age : {}", personnage.age);
+pub fn main() -> Result<(), Box<dyn Error>> {
+    enable_raw_mode()?;
+    let mut stderr = io::stderr();
+    execute!(stderr, EnterAlternateScreen, EnableMouseCapture)?;
+    let backend = CrosstermBackend::new(stderr);
+    let mut terminal = Terminal::new(backend)?;
 
-    println!(" *** education ***");
-    println!("education : {}", personnage.education.name);
-    println!("level : {}", personnage.education.level);
 
-    println!(" *** personnality ***");
-    for personalit in personnage.personnality {
-        println!("{}", personalit.name);
+    let params = get_params();
+    let mut app = app::App::new(params);
+
+    let res = run_app(&mut terminal, &mut app);
+    disable_raw_mode()?;
+    execute!(terminal.backend_mut(),LeaveAlternateScreen,DisableMouseCapture)?;
+    terminal.show_cursor()?;
+
+    if let Err(err) = res {
+        println!("kind : {}, {}", err.kind(), err);
     }
 
-    println!(" *** statistiques ***");
-    for (key, val) in personnage.statistiques.iter() {
-        println!("{key} : {}", val.base + val.bonus);
-    }
-
-    println!("points_totaux : {}", personnage.points_totaux);
+    Ok(())
 }
 
-pub fn main() {
-    let params = get_params();
-    let personnage = core::generate_personnage(params);
-    display_personnage(personnage);
+fn run_app<B: Backend>(terminal: &mut Terminal<B>, app: &mut app::App) -> io::Result<()>
+where
+    io::Error: From<B::Error>,
+{
+    while !app.exit {
+        terminal.draw(|frame| ui::ui(frame, app))?;
+        if let Event::Key(key) = event::read()? {
+            if key.kind == event::KeyEventKind::Release {
+                // Skip events that are not KeyEventKind::Press
+                continue;
+            }
+            match app.current_screen {
+                CurrentScreen::Main => {
+                    if key.modifiers.contains(KeyModifiers::CONTROL) && (key.code == KeyCode::Char('q') || key.code == KeyCode::Char('c'))  {
+                        app.current_screen = CurrentScreen::Exit;
+                    }
+                    if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('s') {
+                        app.current_screen = CurrentScreen::Save;
+                    }
+                    if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('r') {
+                        let p = get_params();
+                        //println!("{:?}", p);
+                        app.personnage = core::generate_personnage(p);
+                    }
+                    if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('l') {
+                        app.current_screen = CurrentScreen::Load;
+                    }
+                }
+                CurrentScreen::Exit => match key.code {
+                    KeyCode::Char('y') => {
+                        app.exit()
+                    }
+                    KeyCode::Char('n') => {
+                        app.current_screen = CurrentScreen::Main;
+                    }
+                    _ => {}
+                }
+                CurrentScreen::Save => {
+                    match key.code {
+                        KeyCode::Enter => app.save()?,
+                        KeyCode::Char(to_insert) => app.enter_char(to_insert),
+                        KeyCode::Backspace => app.delete_char(),
+                        KeyCode::Left => app.move_cursor_left(),
+                        KeyCode::Right => app.move_cursor_right(),
+                        KeyCode::Esc => app.current_screen = CurrentScreen::Main,
+                        _ => {}
+                    }
+                }
+                CurrentScreen::Load => {
+                    match key.code {
+                        KeyCode::Enter => app.load()?,
+                        KeyCode::Char(to_insert) => app.enter_char(to_insert),
+                        KeyCode::Backspace => app.delete_char(),
+                        KeyCode::Left => app.move_cursor_left(),
+                        KeyCode::Right => app.move_cursor_right(),
+                        KeyCode::Esc => app.current_screen = CurrentScreen::Main,
+                        _ => {}
+                    }
+                }
+            }
+        }
+    }
+    Ok(())
 }

@@ -1,7 +1,7 @@
 use rand::prelude::*;
 use std::{collections::BTreeMap, fmt};
 
-#[derive(Clone, Default)]
+#[derive(Clone, Default,Debug)]
 pub struct Parameters {
     pub education: Option<String>,
     pub level: Option<i8>,
@@ -52,7 +52,7 @@ impl Default for Age {
 impl Age {
     pub fn random() -> Self {
         let mut rng = rand::rng();
-        let age = rng.random_range(0..=70);
+        let age = rng.random_range(3..=70);
         Age(age)
     }
     pub fn get_score_age(&self) -> i32 {
@@ -127,6 +127,17 @@ pub struct Statistique {
     pub name: String,
     pub base: i8,
     pub bonus: i8,
+}
+
+impl fmt::Display for Statistique {
+    // This trait requires `fmt` with this exact signature.
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // Write strictly the first element into the supplied output
+        // stream: `f`. Returns `fmt::Result` which indicates whether the
+        // operation succeeded or failed. Note that `write!` uses syntax which
+        // is very similar to `println!`.
+        write!(f, "{}", self.base + self.bonus)
+    }
 }
 
 impl Statistique {
