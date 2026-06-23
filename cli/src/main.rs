@@ -86,13 +86,14 @@ where
                     }
                     if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('s') {
                         app.current_screen = CurrentScreen::Save;
-                        // app.save()?;
                     }
                     if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('r') {
                         let p = get_params();
                         //println!("{:?}", p);
                         app.personnage = core::generate_personnage(p);
-                        // app.save()?;
+                    }
+                    if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('l') {
+                        app.current_screen = CurrentScreen::Load;
                     }
                 }
                 CurrentScreen::Exit => match key.code {
@@ -107,6 +108,17 @@ where
                 CurrentScreen::Save => {
                     match key.code {
                         KeyCode::Enter => app.save()?,
+                        KeyCode::Char(to_insert) => app.enter_char(to_insert),
+                        KeyCode::Backspace => app.delete_char(),
+                        KeyCode::Left => app.move_cursor_left(),
+                        KeyCode::Right => app.move_cursor_right(),
+                        KeyCode::Esc => app.current_screen = CurrentScreen::Main,
+                        _ => {}
+                    }
+                }
+                CurrentScreen::Load => {
+                    match key.code {
+                        KeyCode::Enter => app.load()?,
                         KeyCode::Char(to_insert) => app.enter_char(to_insert),
                         KeyCode::Backspace => app.delete_char(),
                         KeyCode::Left => app.move_cursor_left(),

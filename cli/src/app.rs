@@ -1,12 +1,13 @@
 use core::structs::{Parameters, Personnage};
-use std::fs;
+use std::fs::File;
 
 
 // #[derive(Debug)]
 pub enum CurrentScreen {
     Main,
     Exit,
-    Save
+    Save,
+    Load
 }
 
 // #[derive(Debug)]
@@ -34,17 +35,24 @@ impl App {
         self.exit = true;
     }
 
-    pub fn save(&mut self) -> Result<(), std::io::Error> {
-        fs::write(format!("{}.json",self.filename.clone()), format!("{:?}", &self.personnage))?;
+    pub fn load(&mut self) -> Result<(), std::io::Error> {
+        let filename = format!("{}.json", self.filename);
+        let file = File::open(filename)?;
+        self.personnage = serde_json::from_reader(file)?;
+        self.current_screen = CurrentScreen::Main;
+        self.reset_cursor();
+        self.filename = String::new();
+        Ok(())
+    }
 
-        // let mut file = File::create("foo.txt")?;
-        // let a = format!("{:?}", &self.personnage);
-        // let mut v: Vec<u8> = Vec::new();
-        // writeln!(&mut v, "{a}").unwrap();
-        // file.write(&v)?;
+    pub fn save(&mut self) -> Result<(), std::io::Error> {
+        let filename = format!("{}.json", self.filename);
+        let file = File::create(filename)?;
+        serde_json::to_writer_pretty(file, &self.personnage)?;
 
         self.current_screen = CurrentScreen::Main;
         self.reset_cursor();
+        self.filename = String::new();
         Ok(())
     }
 
